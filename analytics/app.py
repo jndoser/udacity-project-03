@@ -8,6 +8,7 @@ from sqlalchemy import and_, text
 from random import randint
 
 from config import app, db
+from models import Token, User
 
 
 port_number = int(os.environ.get("APP_PORT", 5153))

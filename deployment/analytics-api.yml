@@ -6,10 +6,10 @@ spec:
   selector:
     app.kubernetes.io/name: analytics-api
   ports:
-  - name: "5151"
+  - name: "5153"
     protocol: TCP
-    port: 5151
-    targetPort: 5151
+    port: 5153
+    targetPort: 5153
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,18 +29,18 @@ spec:
     spec:
       containers:
       - name: analytics-api
-        image: isjustintime/cd12355-admin-api:0.1.0
+        image: 075872168350.dkr.ecr.us-east-1.amazonaws.com/udacity-coworking:0.0.1
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
             path: /health_check
-            port: 5151
+            port: 5153
           initialDelaySeconds: 5
           timeoutSeconds: 2
         readinessProbe:
           httpGet:
             path: "/readiness_check"
-            port: 5151
+            port: 5153
           initialDelaySeconds: 5
           timeoutSeconds: 5
         env:
@@ -49,11 +49,24 @@ spec:
             configMapKeyRef:
               name: db-env
               key: DB_USERNAME
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_NAME
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_PORT
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db-secret
               key: DB_PASSWORD
-        - name: DB_HOST
-          value: app-db
       restartPolicy: Always
